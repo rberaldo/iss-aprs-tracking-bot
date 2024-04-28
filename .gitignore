@@ -1,0 +1,5 @@
+config.py
+venv/
+__pycache__
+db/*
+iss_aprs_bot_persistence
