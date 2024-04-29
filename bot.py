@@ -16,7 +16,6 @@ from telegram import Update
 from telegram.ext import PicklePersistence, filters, Application, CommandHandler, MessageHandler, ContextTypes
 
 import issaprs as iss
-
 from config import BOT_KEY
 from messages import *
 
@@ -70,8 +69,9 @@ def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
 async def warn(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send an update if there is new APRS activity from the ISS."""
     job = context.job
+    inactivity_gap = job.data
 
-    if iss.check_activity(str(job.user_id), INACTIVE_TIME):
+    if iss.check_activity(str(job.user_id), inactivity_gap):
         text = NEW_ACTIVITY
         text += iss.inform_last_heard()
 
@@ -82,6 +82,7 @@ async def warn(context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def set_tracking(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Add a warning to the job queue."""
+    inactivity_gap = int(context.args[0]) if context.args[0] else INACTIVITY_TIME
     chat_id = update.effective_message.chat_id
     user_id = update.message.from_user.id
     current_jobs = context.job_queue.get_jobs_by_name(str(chat_id))
@@ -94,7 +95,8 @@ async def set_tracking(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                     INTERVAL,
                                     chat_id=chat_id,
                                     user_id=user_id,
-                                    name=str(chat_id))
+                                    name=str(chat_id),
+                                    data=inactivity_gap)
 
     text = SUCCESS_MSG + iss.inform_last_heard()
 
