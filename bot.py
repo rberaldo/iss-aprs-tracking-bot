@@ -82,10 +82,10 @@ async def warn(context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def set_tracking(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Add a warning to the job queue."""
-    inactivity_gap = int(context.args[0]) if context.args[0] else INACTIVITY_TIME
+    inactivity_gap =  int(context.args[0]) if context.args else INACTIVE_TIME
     chat_id = update.effective_message.chat_id
     user_id = update.message.from_user.id
-    current_jobs = context.job_queue.get_jobs_by_name(str(chat_id))
+    current_jobs = context.job_queue.get_jobs_by_name("track_" + str(chat_id))
 
     if current_jobs:
         await update.effective_message.reply_text(ALREADY_MSG)
@@ -95,7 +95,7 @@ async def set_tracking(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
                                     INTERVAL,
                                     chat_id=chat_id,
                                     user_id=user_id,
-                                    name=str(chat_id),
+                                    name="track_" + str(chat_id),
                                     data=inactivity_gap)
 
     text = SUCCESS_MSG + iss.inform_last_heard()
@@ -107,7 +107,7 @@ async def unset_tracking(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     """Remove a job from the queue and deletes user database."""
     chat_id = update.message.chat_id
     user_id = update.message.from_user.id
-    job_removed = remove_job_if_exists(str(chat_id), context)
+    job_removed = remove_job_if_exists("track_" + str(chat_id), context)
     text = UNSET_MSG if job_removed else UNSET_ERROR_MSG
 
     if job_removed:
