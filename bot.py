@@ -1,12 +1,24 @@
 #!/usr/bin/env python
-# This program is dedicated to the public domain under the CC0 license.
-
+# Copyright 2024 Rafael Beraldo
+#
+# This file is part of ISS APRS tracking bot.
+#
+# ISS APRS tracking bot is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3 of
+# the License, or (at your option) any later version.
+#
+# ISS APRS tracking bot is distributed in the hope that it will be
+# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with ISS APRS tracking bot. If not, see
+# <https://www.gnu.org/licenses/>.
+#
 """
-A bot to track APRS packets from the ISS.
-
-This Bot uses the Application class to handle the bot and the JobQueue to
-send timed messages. A custom library is used to scrape ariss.net, process
-its information and prepare user messages.
+A bot to track APRS packet activity from the ISS.
 """
 
 # Imports
