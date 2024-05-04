@@ -46,7 +46,6 @@ INACTIVE_TIME = float(5 * SECOND)
 
 # Database options
 NO_USER = 'testing'
-DEFAULT_DB = "iss_aprs_heard_stations.csv"
 DB_DIR = 'db/'
 
 
@@ -54,7 +53,7 @@ DB_DIR = 'db/'
 def get_last_heard() -> list[str]:
     """Scrapes latest APRS activity heard from the ISS. Returns the
     last station heard as an array with strings representing the
-    callsign, time, and findu.com URL."""
+    callsign, time, and findU.com URL."""
     soup = BeautifulSoup(requests.get(PAGE).text, 'html.parser')
     rows = soup.find_all('tr')
     last_heard = rows[1].find_all('td')
@@ -71,7 +70,7 @@ def get_last_heard() -> list[str]:
 
 def calculate_elapsed_time(timestamp: str) -> float:
     """Parses time in the format year, month, day, hour, minutes, and
-    seconds, and returns a flot of how many seconds have passed."""
+    seconds, and returns a float of how many seconds have passed."""
     parsed_time = datetime.strptime(timestamp, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
     current_time = datetime.now(timezone.utc)
     time_delta = current_time - parsed_time
@@ -132,7 +131,7 @@ def inform_last_heard() -> str:
 
 
 # Database functions
-def is_entry_in_db(db_path, entry: list) -> bool:
+def is_entry_in_db(db_path: str, entry: list) -> bool:
     """Returns if the latest entry in the database is the same as the
     current entry."""
     if not os.path.isfile(db_path):
@@ -156,7 +155,7 @@ def save_last_heard(db_path: str, current: list) -> None:
 
 
 def read_previously_heard(db_path: str) -> list[str]:
-    """Returns the previsouly last heard station from the database. If
+    """Returns the previously last heard station from the database. If
     nothing was found, returns an empty list."""
     with open(db_path, 'r',  encoding = 'UTF-8',) as csvfile:
         reader = csv.reader(csvfile)
@@ -167,32 +166,32 @@ def read_previously_heard(db_path: str) -> list[str]:
         return last_line
 
 
-def user_db_path(user: str) -> str:
+def user_db_path(user: str, db_type: str) -> str:
     """Returns the path to a user's database."""
-    user_db = DB_DIR + user + '.csv'
+    user_db = DB_DIR + user + "-" + db_type + '.csv'
 
     return user_db
 
 
-def user_has_db(user: str) -> bool:
+def user_has_db(user: str, db_type : str) -> bool:
     """Checks if user has a database file."""
-    user_db = user_db_path(user)
+    user_db = user_db_path(user, db_type)
 
     return os.path.isfile(user_db)
 
 
-def create_db_for_user(user: str, current: list) -> None:
+def create_db_for_user(user: str, current: list, db_type: str) -> None:
     "Initializes the user's database with the current station."
-    user_db = user_db_path(user)
+    user_db = user_db_path(user, db_type)
 
     print(f"Log: Initializing ISS APRS database for {user}.")
     save_last_heard(user_db, current)
 
 
-def delete_user_db(user: str) -> None:
+def delete_user_db(user: str, db_type: str) -> None:
     """Given a user, delete its database file."""
-    if user_has_db(user):
-        user_db = user_db_path(user)
+    if user_has_db(user, db_type):
+        user_db = user_db_path(user, db_type)
         print(f"Deleting user {user} database…")
         os.remove(user_db)
 
@@ -210,16 +209,18 @@ def new_activity(previous: list, current: list, threshold: float) -> bool:
     return False
 
 
+# Tracking
 def check_activity(user: str, threshold: float) -> bool:
-    """Returns a message if new APRS activity from the ISS has been
+    """Returns whether new APRS activity from the ISS has been
     detected."""
     print(f"{datetime.now()}: Checking…")
 
-    user_db = user_db_path(user)
+    db_type = "track"
+    user_db = user_db_path(user, db_type)
     current_station = get_last_heard()
 
-    if not user_has_db(user):
-        create_db_for_user(user, current_station)
+    if not user_has_db(user, db_type):
+        create_db_for_user(user, current_station, db_type)
 
     previous_station = read_previously_heard(user_db)
 
@@ -236,9 +237,34 @@ def check_activity(user: str, threshold: float) -> bool:
     return False
 
 
+# Watching
+def was_callsign_heard(user: str, callsign: str) -> bool:
+    """Returns whether a callsign's packet was digipeated by the
+    ISS."""
+    db_type = "watch"
+    user_db = user_db_path(user, db_type)
+    current_station = get_last_heard()
+    current_callsign = current_station[0]
+    threshold = SECOND
+
+    if not user_has_db(user, db_type):
+        create_db_for_user(user, current_station, db_type)
+
+    previous_station = read_previously_heard(user_db)
+
+    if new_activity(previous_station, current_station, threshold):
+        if current_callsign == callsign:
+            save_last_heard(user_db, current_station)
+
+            return True
+
+    save_last_heard(user_db, current_station)
+    return False
+
+
 # Functionality testing
 def periodically_check_activity() -> None:
-    """Runs the program indefinetly. Useful in testing."""
+    """Runs the tracking routine indefinitely. Useful in testing."""
     while True:
         check_activity(NO_USER, INACTIVE_TIME)
         time.sleep(INTERVAL)
