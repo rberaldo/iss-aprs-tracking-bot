@@ -29,7 +29,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, PicklePers
 from ptbcontrib.ptb_jobstores.mongodb import PTBMongoDBJobStore
 
 import issaprs as iss
-from config import TEST_BOT_KEY, MONGO_DB_URI
+from config import BOT_KEY, MONGO_DB_URI
 from messages import *
 
 # Configuration
@@ -203,7 +203,7 @@ def main() -> None:
     # Setup bot and persistence
     persistence = PicklePersistence(filepath="iss_aprs_bot_persistence")
     app = (Application.builder()
-           .token(TEST_BOT_KEY)
+           .token(BOT_KEY)
            .persistence(persistence=persistence)
            .build()
            )
