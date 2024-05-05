@@ -2,10 +2,12 @@
 
 Tracks APRS activity heard from the International Space Station on [[https://ariss.net/][ariss.net]] and alerts users when the digital packet radio is on.
 
+Available at: [[https://t.me/iss_aprs_bot][t.me/iss_aprs_bot]]
+
 ** Wishlist and bugs
 
-- The bot does not have persistent jobs. This means that restarting the bot can stop user’s jobs.
+- Conditional tracking: only notify user of APRS activity from the ISS if it is going to pass over in the next /n/ hours.
 
-** See also
+** Other APRS tools
 
 - [[https://aprs.tools/][aprs.tools]]: Easily find APRS symbols.
