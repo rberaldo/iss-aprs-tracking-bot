@@ -1,0 +1,24 @@
+anyio==4.3.0
+APScheduler==3.10.4
+beautifulsoup4==4.12.3
+bs4==0.0.2
+certifi==2024.2.2
+charset-normalizer==3.3.2
+dnspython==2.6.1
+h11==0.14.0
+httpcore==1.0.5
+httpx==0.26.0
+idna==3.7
+nodeenv==1.8.0
+ptbcontrib @ git+https://github.com/python-telegram-bot/ptbcontrib.git@b7550332bd9556fb4a65f3ba4502bf3f90e2c8fd
+pymongo==4.7.1
+pyright==1.1.361
+python-telegram-bot==20.8
+pytz==2024.1
+requests==2.31.0
+setuptools==69.5.1
+six==1.16.0
+sniffio==1.3.1
+soupsieve==2.5
+tzlocal==5.2
+urllib3==2.2.1
