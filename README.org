@@ -1,10 +1,10 @@
 #+title: ISS APRS tracking bot
 
-Tracks APRS activity heard from the International Space Station on ariss.net and alerts users when the digital packet radio is on.
+Tracks APRS activity heard from the International Space Station on [[https://ariss.net/][ariss.net]] and alerts users when the digital packet radio is on.
 
-** TODO Wishlist and bugs
+** Wishlist and bugs
 
-** TODO Thanks to
+- The bot does not have persistent jobs. This means that restarting the bot can stop user’s jobs.
 
 ** See also
 
