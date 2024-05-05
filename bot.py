@@ -26,9 +26,10 @@ import logging
 
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, PicklePersistence, filters, ContextTypes
+from ptbcontrib.ptb_jobstores.mongodb import PTBMongoDBJobStore
 
 import issaprs as iss
-from config import BOT_KEY
+from config import TEST_BOT_KEY, MONGO_DB_URI
 from messages import *
 
 # Configuration
@@ -199,12 +200,20 @@ async def unset_watching(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 def main() -> None:
     """Run bot."""
 
+    # Setup bot and persistence
     persistence = PicklePersistence(filepath="iss_aprs_bot_persistence")
     app = (Application.builder()
-           .token(BOT_KEY)
+           .token(TEST_BOT_KEY)
            .persistence(persistence=persistence)
            .build()
            )
+
+    app.job_queue.scheduler.add_jobstore(
+        PTBMongoDBJobStore(
+            application=app,
+            host=MONGO_DB_URI,
+        )
+    )
 
     # Command handlers
     app.add_handler(CommandHandler("start", start))

@@ -1,1 +1,2 @@
 BOT_KEY = "" # Add your Telegram bot key
+MONGODB_URI = "" # Add your MongoDB URI for job queue persistence
