@@ -23,13 +23,12 @@ A bot to track APRS packet activity from the ISS.
 
 # Imports
 import logging
-import os
 
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, PicklePersistence, filters, ContextTypes
 
 import issaprs as iss
-from config import TEST_BOT_KEY
+from config import BOT_KEY
 from messages import *
 
 # Configuration
@@ -202,7 +201,7 @@ def main() -> None:
 
     persistence = PicklePersistence(filepath="iss_aprs_bot_persistence")
     app = (Application.builder()
-           .token(TEST_BOT_KEY)
+           .token(BOT_KEY)
            .persistence(persistence=persistence)
            .build()
            )
