@@ -26,8 +26,9 @@ HELP_MSG = (
     "📡 Use /lastheard to see the latest APRS activity on ariss.net.\n\n"
     "🛰️ Use /track if you want to be warned when new APRS activity is "
     "heard by the ISS.\n\n"
-    "👩‍🚀 Use /watch <callsign> to receive a notification when APRS packets "
-    "from a specific callsign is heard. Do not forget to include the SSID."
+    "👩‍🚀 Use /watch <callsign> to receive a notification when APRS "
+    "packets from a specific callsign is heard. Do not forget to include "
+    "the SSID.\n\n"
     "🤖 Use /why to learn more about how this bot operates."
 )
 

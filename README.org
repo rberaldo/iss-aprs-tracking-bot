@@ -8,4 +8,4 @@ Tracks APRS activity heard from the International Space Station on [[https://ari
 
 ** See also
 
-- [[https://aprs.tools/][aprs.tools]] - Easily find APRS symbols.
+- [[https://aprs.tools/][aprs.tools]]: Easily find APRS symbols.
